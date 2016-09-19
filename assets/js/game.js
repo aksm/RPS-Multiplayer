@@ -1,15 +1,5 @@
 
-// function getImage(choice, div) {
-// 	var queryURL = "https://crossorigin.me/http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&rating=pg-13&tag="+choice;
-
-// 	$.ajax({url: queryURL, method: 'GET'}).done(function(response) {
-// 		p1 = $("<img width='300px'>").attr("src", response.data.image_original_url); 
-// 		div.append(p1);
-// 	});
-
-// }
-
-// getImage("scissors",$("#player1"));
+// Initialize variables
 var database = firebase.database();
 var username = "";
 var opponentname = "";
@@ -17,7 +7,20 @@ var players = 0;
 var gameID = 0;
 var playerState = "";
 
+// Pick image for rock, paper, or scissors
+function pickImage(token) {
+	return "assets/images/"+token+(Math.floor(Math.random() * (Math.floor(9) - Math.ceil(1) + 1)) + Math.ceil(1)) + ".gif";
+}
+function hide(element) {
+	element.removeClass("show");
+	element.addClass("hide");
+}
+function show(element) {
+	element.removeClass("hide");
+	element.addClass("show");	
+}
 $(document).ready(function() {
+	// Update any waiting player in html and change button text
 	database.ref().orderByKey().limitToLast(1).on("child_added", function(snapshot) {
 		if(snapshot.val().players == 1) {
 			opponentname = snapshot.val().player1;
@@ -25,8 +28,9 @@ $(document).ready(function() {
 			$("#start-game").text("Join Game");			
 		}	
 	});
-	
+	// Update local variables and firebase when player starts or joins game
 	$(document).on("click","#start-game", function() {
+
 		database.ref().orderByKey().limitToLast(1).on("child_added", function(snapshot) {
 			var gamekey = snapshot.getKey();
 			if ((!snapshot.exists() || snapshot.val().players == 2) && playerState != "joined") {
@@ -34,6 +38,13 @@ $(document).ready(function() {
 				$("#player1-status").html(username);
 				players++;
 				playerState = "joined";
+				$("#start-section").addClass("hide")
+				$("div#player1 div.rock").html("<button class='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
+				$("div#player1 div.paper").html("<button class='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
+				$("div#player1 div.scissors").html("<button class='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
+				show($("div#player1 div.rock"));
+				show($("div#player1 div.paper"));
+				show($("div#player1 div.scissors"));				
 				database.ref().push({
 					player1: username,
 					players: players
@@ -42,6 +53,13 @@ $(document).ready(function() {
 				username = $("#username").val();
 				players = 2;
 				playerState = "joined";
+				$("#start-section").addClass("hide")
+				$("div#player2 div.rock").html("<button class='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
+				$("div#player2 div.paper").html("<button class='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
+				$("div#player2 div.scissors").html("<button class='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
+				show($("div#player2 div.rock"));
+				show($("div#player2 div.paper"));
+				show($("div#player2 div.scissors"));				
 				database.ref(gamekey).update({
 					player2: username,
 					players: players

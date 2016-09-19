@@ -2,9 +2,20 @@
 	text-align: center;
 	border: none;
 }
-/*form {
-	text-align: center;
-}*/
 #start-section {
 	margin-bottom: 20px;
+}
+.hide {
+	display: none;
+}
+.show {
+	display: block;
+}
+button {
+	padding: 0;
+	border: none;
+}
+.token-choice .row {
+	margin-top: 10px;
+
 }
