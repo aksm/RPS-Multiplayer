@@ -14,7 +14,7 @@ var p1losses = 0;
 var p2losses = 0;
 var ties = 0;
 var gamekey = "";
-var round = 0;
+var round = 1;
 
 // Pick image for rock, paper, or scissors
 function pickImage(token) {
@@ -28,9 +28,20 @@ function show(element) {
 	element.removeClass("hide");
 	element.addClass("show");	
 }
-function newRound() {
-	$(".rps").prop("disabled", false);
-
+function newRound(snapshot) {
+	if(snapshot.val().round == "complete") {
+		roundEnd(snapshot);				
+		database.ref(gamekey).update({
+			round: "inProgress"
+		});
+		setTimeout(function() {rebootRound(snapshot)}, 5000);
+	}
+}
+function rebootRound(snapshot) {
+		$(".rps").prop("disabled", false);
+		show($("div#"+role+" div.tokens"));
+		$("div#game div.panel-heading").html("ROUND "+round);
+		$("div#game div.panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
 }
 function player1Wins(snapshot) {
 	p1wins = snapshot.val().player1.wins;
@@ -39,7 +50,9 @@ function player1Wins(snapshot) {
 	p2losses++;
 	database.ref(gamekey).update({
 		"player1/wins": p1wins,
-		"player2/losses": p2losses
+		"player2/losses": p2losses,
+		round: "complete",
+		roundWinner: "PLAYER 1 WINS!!"
 	});
 }
 function player2Wins(snapshot) {
@@ -49,8 +62,17 @@ function player2Wins(snapshot) {
 	p2wins++;
 	database.ref(gamekey).update({
 		"player1/losses": p1losses,
-		"player2/wins": p2wins
+		"player2/wins": p2wins,
+		round: "complete",
+		roundWinner: "PLAYER 2 WINS!!"
 	});
+}
+function roundEnd(snapshot) {
+	var p1img = snapshot.val().player1.img;
+	var p2img = snapshot.val().player2.img;
+	var roundWinner = snapshot.val().roundWinner;
+	$("div#game div.panel-heading").html(roundWinner);
+	$("div#game div.panel-body").html("<img src='"+p1img+"' class='img-responsive'><img src='"+p2img+"' class='img-responsive'>");
 }
 $(document).ready(function() {
 
@@ -62,7 +84,7 @@ $(document).ready(function() {
 	database.ref().orderByKey().limitToLast(1).on("child_added", function(snapshot) {
 		if(snapshot.val().players == 1) {
 			opponentname = snapshot.val().player1.name;
-			$("#player1-status").html(opponentname);
+			$("#player1-status").html("PLAYER 1: "+opponentname);
 			show($("div#player1 div.stats"));
 			$("#start-game").text("Join Game");
 		}
@@ -73,7 +95,7 @@ $(document).ready(function() {
 			if ((!snapshot.exists() || snapshot.val().players == 2) && playerState != "joined" && $("#username").val() != "") {
 				username = $("#username").val();
 				role = "player1";
-				$("#player1-status").html(username);
+				$("#player1-status").html("PLAYER 1: "+username);
 				players++;
 				playerState = "joined";
 				hide($("#start-section"));
@@ -98,7 +120,7 @@ $(document).ready(function() {
 				players = 2;
 				playerState = "joined";
 				role = "player2";
-				$("#player2-status").html(username);
+				$("#player2-status").html("PLAYER 2: "+username);
 				hide($("#start-section"));
 				hide($("div#player2 div.question"));
 				$("div#player2 div.rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
@@ -120,8 +142,10 @@ $(document).ready(function() {
 	$(document).on("click", ".rps", function() {
 		round++;
 		choice = $(this).attr("data-token");
+		var choiceImg = $(this).find("img").attr("src");
 		var choicekey = {};
 		choicekey[role+"/round"+round] = choice;
+		choicekey[role+"/img"] = choiceImg;
 		database.ref(gamekey).update(choicekey);
 		$(".rps").prop("disabled", true);
 		if(choice == "rock") {
@@ -142,7 +166,9 @@ $(document).ready(function() {
 					ties = snapshot.val().ties;
 					ties++;
 					database.ref(gamekey).update({
-						ties: ties
+						ties: ties,
+						round: "complete",
+						roundWinner: "NO ONE. IT'S A TIE."
 					});
 				} else if(p1token == "rock" && p2token == "paper") {
 					player2Wins(snapshot);
@@ -174,10 +200,10 @@ $(document).ready(function() {
 				}
 				if(role == "player1" && snapshot.val().players == 2) {
 					opponentname = snapshot.val().player2.name;
-					$("#player2-status").html(opponentname);
+					$("#player2-status").html("PLAYER 2: "+opponentname);
 					show($("div#player2 div.stats"));
-
 				}
+				newRound(snapshot);
 			});
 		}
 	});
