@@ -130,6 +130,7 @@ $(document).ready(function() {
 				show($("#player2 .paper"));
 				show($("#player2 .scissors"));				
 				show($("#player2 .stats"));
+				show($("#chat"));
 				database.ref(gamekey).update({
 					player2: {name: username, wins: p2wins, losses: p2losses},
 					players: players
@@ -202,6 +203,7 @@ $(document).ready(function() {
 					opponentname = snapshot.val().player2.name;
 					$("#player2-status").html("PLAYER 2: "+opponentname);
 					show($("#player2 .stats"));
+					show($("#chat"));
 				}
 				newRound(snapshot);
 			});
