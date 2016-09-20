@@ -41,7 +41,7 @@ function rebootRound(snapshot) {
 		$(".rps").prop("disabled", false);
 		show($("#"+role+" .tokens"));
 		$("#game .panel-heading").html("ROUND "+round);
-		$("#game .panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
+		$("#game .panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive img-circle'>")
 }
 function player1Wins(snapshot) {
 	p1wins = snapshot.val().player1.wins;
@@ -72,14 +72,14 @@ function roundEnd(snapshot) {
 	var p2img = snapshot.val().player2.img;
 	var roundWinner = snapshot.val().roundWinner;
 	$("#game .panel-heading").html(roundWinner);
-	$("#game .panel-body").html("<img src='"+p1img+"' class='img-responsive'><img src='"+p2img+"' class='img-responsive'>");
+	$("#game .panel-body").html("<img src='"+p1img+"' class='img-responsive img-circle'><img src='"+p2img+"' class='img-responsive img-circle'>");
 }
 $(document).ready(function() {
 
 	// Initialize placeholder image for players
-	$("#player1 .question").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
-	$("#player2 .question").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
-	$("#game .panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
+	$("#player1 .question").html("<img src='"+pickImage("question")+"' class='img-responsive img-circle'>")
+	$("#player2 .question").html("<img src='"+pickImage("question")+"' class='img-responsive img-circle'>")
+	$("#game .panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive img-circle'>")
 	// Update any waiting player in html and change button text
 	database.ref().orderByKey().limitToLast(1).on("child_added", function(snapshot) {
 		if(snapshot.val().players == 1) {
@@ -100,9 +100,9 @@ $(document).ready(function() {
 				playerState = "joined";
 				hide($("#start-section"));
 				hide($("#player1 .question"));
-				$("#player1 .rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
-				$("#player1 .paper").html("<button class='rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
-				$("#player1 .scissors").html("<button class='rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
+				$("#player1 .rock").html("<button class='btn btn-default rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive img-circle'>");
+				$("#player1 .paper").html("<button class='btn btn-default rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive img-circle'>");
+				$("#player1 .scissors").html("<button class='btn btn-default rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive img-circle'>");
 				show($("#player1 .rock"));
 				show($("#player1 .paper"));
 				show($("#player1 .scissors"));
@@ -123,9 +123,9 @@ $(document).ready(function() {
 				$("#player2-status").html("PLAYER 2: "+username);
 				hide($("#start-section"));
 				hide($("#player2 .question"));
-				$("#player2 .rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
-				$("#player2 .paper").html("<button class='rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
-				$("#player2 .scissors").html("<button class='rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
+				$("#player2 .rock").html("<button class='btn btn-default rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive img-circle'>");
+				$("#player2 .paper").html("<button class='btn btn-default rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive img-circle'>");
+				$("#player2 .scissors").html("<button class='btn btn-default rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive img-circle'>");
 				show($("#player2 .rock"));
 				show($("#player2 .paper"));
 				show($("#player2 .scissors"));				

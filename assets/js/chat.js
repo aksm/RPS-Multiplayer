@@ -23,7 +23,11 @@ $(document).ready(function() {
 				 		var chatstatus = {};
 				 		chatstatus["chat/m"+mnumber+"/status"] = "sent";
 				 		database.ref(gamekey).update(chatstatus);
-				 		$("#chat-display").append("<p>"+snapshot.val().chat["m"+mnumber].player+": "+snapshot.val().chat["m"+mnumber].text);
+				 		if((role == "player1" && username == snapshot.val().chat["m"+mnumber].player) || (role == "player2" && opponentname == snapshot.val().chat["m"+mnumber].player)) {
+				 			$("#chat-display").append("<p class='text-left chat-user'>"+snapshot.val().chat["m"+mnumber].player+"<p class='text-left chat-text'>"+snapshot.val().chat["m"+mnumber].text+"<hr>");
+						} else if((role == "player2" && username == snapshot.val().chat["m"+mnumber].player) || (role == "player1" && opponentname == snapshot.val().chat["m"+mnumber].player)) {
+				 			$("#chat-display").append("<p class='text-right chat-user'>"+snapshot.val().chat["m"+mnumber].player+"<p class='text-right chat-text'>"+snapshot.val().chat["m"+mnumber].text+"<hr>");							
+						}
 					}
 				}
 
