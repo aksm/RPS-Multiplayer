@@ -39,9 +39,9 @@ function newRound(snapshot) {
 }
 function rebootRound(snapshot) {
 		$(".rps").prop("disabled", false);
-		show($("div#"+role+" div.tokens"));
-		$("div#game div.panel-heading").html("ROUND "+round);
-		$("div#game div.panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
+		show($("#"+role+" .tokens"));
+		$("#game .panel-heading").html("ROUND "+round);
+		$("#game .panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
 }
 function player1Wins(snapshot) {
 	p1wins = snapshot.val().player1.wins;
@@ -71,21 +71,21 @@ function roundEnd(snapshot) {
 	var p1img = snapshot.val().player1.img;
 	var p2img = snapshot.val().player2.img;
 	var roundWinner = snapshot.val().roundWinner;
-	$("div#game div.panel-heading").html(roundWinner);
-	$("div#game div.panel-body").html("<img src='"+p1img+"' class='img-responsive'><img src='"+p2img+"' class='img-responsive'>");
+	$("#game .panel-heading").html(roundWinner);
+	$("#game .panel-body").html("<img src='"+p1img+"' class='img-responsive'><img src='"+p2img+"' class='img-responsive'>");
 }
 $(document).ready(function() {
 
 	// Initialize placeholder image for players
-	$("div#player1 div.question").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
-	$("div#player2 div.question").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
-	$("div#game div.panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
+	$("#player1 .question").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
+	$("#player2 .question").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
+	$("#game .panel-body").html("<img src='"+pickImage("question")+"' class='img-responsive'>")
 	// Update any waiting player in html and change button text
 	database.ref().orderByKey().limitToLast(1).on("child_added", function(snapshot) {
 		if(snapshot.val().players == 1) {
 			opponentname = snapshot.val().player1.name;
 			$("#player1-status").html("PLAYER 1: "+opponentname);
-			show($("div#player1 div.stats"));
+			show($("#player1 .stats"));
 			$("#start-game").text("Join Game");
 		}
 	});
@@ -99,14 +99,14 @@ $(document).ready(function() {
 				players++;
 				playerState = "joined";
 				hide($("#start-section"));
-				hide($("div#player1 div.question"));
-				$("div#player1 div.rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
-				$("div#player1 div.paper").html("<button class='rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
-				$("div#player1 div.scissors").html("<button class='rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
-				show($("div#player1 div.rock"));
-				show($("div#player1 div.paper"));
-				show($("div#player1 div.scissors"));
-				show($("div#player1 div.stats"));
+				hide($("#player1 .question"));
+				$("#player1 .rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
+				$("#player1 .paper").html("<button class='rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
+				$("#player1 .scissors").html("<button class='rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
+				show($("#player1 .rock"));
+				show($("#player1 .paper"));
+				show($("#player1 .scissors"));
+				show($("#player1 .stats"));
 				var newkey = database.ref().push({
 					player1: {name: username, wins: p1wins, losses: p1losses},
 					players: players,
@@ -122,14 +122,14 @@ $(document).ready(function() {
 				role = "player2";
 				$("#player2-status").html("PLAYER 2: "+username);
 				hide($("#start-section"));
-				hide($("div#player2 div.question"));
-				$("div#player2 div.rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
-				$("div#player2 div.paper").html("<button class='rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
-				$("div#player2 div.scissors").html("<button class='rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
-				show($("div#player2 div.rock"));
-				show($("div#player2 div.paper"));
-				show($("div#player2 div.scissors"));				
-				show($("div#player2 div.stats"));
+				hide($("#player2 .question"));
+				$("#player2 .rock").html("<button class='rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive'>");
+				$("#player2 .paper").html("<button class='rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive'>");
+				$("#player2 .scissors").html("<button class='rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive'>");
+				show($("#player2 .rock"));
+				show($("#player2 .paper"));
+				show($("#player2 .scissors"));				
+				show($("#player2 .stats"));
 				database.ref(gamekey).update({
 					player2: {name: username, wins: p2wins, losses: p2losses},
 					players: players
@@ -149,14 +149,14 @@ $(document).ready(function() {
 		database.ref(gamekey).update(choicekey);
 		$(".rps").prop("disabled", true);
 		if(choice == "rock") {
-			hide($("div#"+role+" div.paper"));
-			hide($("div#"+role+" div.scissors"));
+			hide($("#"+role+" .paper"));
+			hide($("#"+role+" .scissors"));
 		} else if (choice == "paper") {
-			hide($("div#"+role+" div.rock"));
-			hide($("div#"+role+" div.scissors"));
+			hide($("#"+role+" .rock"));
+			hide($("#"+role+" .scissors"));
 		} else if (choice == "scissors") {
-			hide($("div#"+role+" div.rock"));
-			hide($("div#"+role+" div.paper"));
+			hide($("#"+role+" .rock"));
+			hide($("#"+role+" .paper"));
 		}
 		database.ref(gamekey).once("value", function(snapshot) {
 			if(snapshot.child("player1/round"+round).exists() && snapshot.child("player2/round"+round).exists()) {
@@ -192,8 +192,8 @@ $(document).ready(function() {
 				p1wins = snapshot.val().player1.wins;
 				p1losses = snapshot.val().player1.losses;
 				ties = snapshot.val().ties;
-				$("div#player1 div.stat-text").html("<p>Wins: "+p1wins+"<p>Losses: "+p1losses+"<p>Ties: "+ties);
-				$("div#player2 div.stat-text").html("<p>Wins: "+p2wins+"<p>Losses: "+p2losses+"<p>Ties: "+ties);
+				$("#player1 .stat-text").html("<p>Wins: "+p1wins+"<p>Losses: "+p1losses+"<p>Ties: "+ties);
+				$("#player2 .stat-text").html("<p>Wins: "+p2wins+"<p>Losses: "+p2losses+"<p>Ties: "+ties);
 				if(snapshot.val().players == 2) { 
 					p2wins = snapshot.val().player2.wins;
 					p2losses = snapshot.val().player2.losses;
@@ -201,7 +201,7 @@ $(document).ready(function() {
 				if(role == "player1" && snapshot.val().players == 2) {
 					opponentname = snapshot.val().player2.name;
 					$("#player2-status").html("PLAYER 2: "+opponentname);
-					show($("div#player2 div.stats"));
+					show($("#player2 .stats"));
 				}
 				newRound(snapshot);
 			});

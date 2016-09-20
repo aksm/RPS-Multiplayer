@@ -98,12 +98,19 @@
 	<!-- Area for talking smack -->
 	<div class="container">
 		<div class="col-md-8 col-md-offset-2" id="chat">
-			<div id="chat-display" class="col-lg-6"></div>
-			<div class="input-group">
-				<input type="text" class="form-control">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button">SEND</button>
-				</span>
+			<div class="panel panel-default">
+				<div class="panel-heading">CHAT</div>
+				<div class="panel-body">
+					<div id="chat-display" class="col-lg-6"></div>
+				</div>
+				<div class="panel-footer">
+					<div class="input-group">
+						<input type="text" class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">TALK SMACK</button>
+						</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -111,5 +118,6 @@
 	<script src="https://www.gstatic.com/firebasejs/3.3.2/firebase.js"></script>
 	<script defer src="assets/js/config.js"></script>
 	<script defer src="assets/js/game.js"></script>
+	<script defer src="assets/js/chat.js"></script>
 </body>
 </html>
