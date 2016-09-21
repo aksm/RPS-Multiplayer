@@ -103,9 +103,13 @@ $(document).ready(function() {
 				$("#player1 .rock").html("<button class='btn btn-default rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive img-circle'>");
 				$("#player1 .paper").html("<button class='btn btn-default rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive img-circle'>");
 				$("#player1 .scissors").html("<button class='btn btn-default rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive img-circle'>");
+				$("#player1 .lizard").html("<button class='btn btn-default rps' data-token='lizard'><img src='"+pickImage("lizard")+"' class='img-responsive img-circle'>");
+				$("#player1 .spock").html("<button class='btn btn-default rps' data-token='spock'><img src='"+pickImage("spock")+"' class='img-responsive img-circle'>");
 				show($("#player1 .rock"));
 				show($("#player1 .paper"));
 				show($("#player1 .scissors"));
+				show($("#player1 .lizard"));
+				show($("#player1 .spock"));
 				show($("#player1 .stats"));
 				var newkey = database.ref().push({
 					player1: {name: username, wins: p1wins, losses: p1losses},
@@ -126,10 +130,14 @@ $(document).ready(function() {
 				$("#player2 .rock").html("<button class='btn btn-default rps' data-token='rock'><img src='"+pickImage("rock")+"' class='img-responsive img-circle'>");
 				$("#player2 .paper").html("<button class='btn btn-default rps' data-token='paper'><img src='"+pickImage("paper")+"' class='img-responsive img-circle'>");
 				$("#player2 .scissors").html("<button class='btn btn-default rps' data-token='scissors'><img src='"+pickImage("scissors")+"' class='img-responsive img-circle'>");
+				$("#player2 .lizard").html("<button class='btn btn-default rps' data-token='lizard'><img src='"+pickImage("lizard")+"' class='img-responsive img-circle'>");
+				$("#player2 .spock").html("<button class='btn btn-default rps' data-token='spock'><img src='"+pickImage("spock")+"' class='img-responsive img-circle'>");
 				show($("#player2 .rock"));
 				show($("#player2 .paper"));
 				show($("#player2 .scissors"));				
 				show($("#player2 .stats"));
+				show($("#player2 .lizard"));
+				show($("#player2 .spock"));
 				show($("#chat"));
 				database.ref(gamekey).update({
 					player2: {name: username, wins: p2wins, losses: p2losses},
@@ -152,13 +160,31 @@ $(document).ready(function() {
 		if(choice == "rock") {
 			hide($("#"+role+" .paper"));
 			hide($("#"+role+" .scissors"));
+			hide($("#"+role+" .lizard"));
+			hide($("#"+role+" .spock"));
 		} else if (choice == "paper") {
 			hide($("#"+role+" .rock"));
 			hide($("#"+role+" .scissors"));
+			hide($("#"+role+" .lizard"));
+			hide($("#"+role+" .spock"));
 		} else if (choice == "scissors") {
 			hide($("#"+role+" .rock"));
 			hide($("#"+role+" .paper"));
+			hide($("#"+role+" .lizard"));
+			hide($("#"+role+" .spock"));
+		} else if (choice == "lizard") {
+			hide($("#"+role+" .rock"));
+			hide($("#"+role+" .paper"));
+			hide($("#"+role+" .scissors"));
+			hide($("#"+role+" .spock"));
+		} else if (choice == "spock") {
+			hide($("#"+role+" .rock"));
+			hide($("#"+role+" .paper"));
+			hide($("#"+role+" .scissors"));
+			hide($("#"+role+" .lizard"));
 		}
+
+
 		database.ref(gamekey).once("value", function(snapshot) {
 			if(snapshot.child("player1/round"+round).exists() && snapshot.child("player2/round"+round).exists()) {
 				var p1token = snapshot.val().player1["round"+round];
@@ -183,7 +209,46 @@ $(document).ready(function() {
 					player2Wins(snapshot);
 				} else if(p1token == "scissors" && p2token == "paper") {
 					player1Wins(snapshot);
+				} else if(p1token == "lizard" && p2token == "rock") {
+					player2Wins(snapshot);
+				} else if(p1token == "rock" && p2token == "lizard") {
+					player1Wins(snapshot);
+				} else if(p1token == "lizard" && p2token == "paper") {
+					player1Wins(snapshot);
+				} else if(p1token == "paper" && p2token == "lizard") {
+					player2Wins(snapshot);
+				} else if(p1token == "lizard" && p2token == "scissors") {
+					player2Wins(snapshot);
+				} else if(p1token == "scissors" && p2token == "lizard") {
+					player1Wins(snapshot);
+				} else if(p1token == "lizard" && p2token == "spock") {
+					player1Wins(snapshot);
+				} else if(p1token == "spock" && p2token == "lizard") {
+					player2Wins(snapshot);
+				} else if(p1token == "spock" && p2token == "rock") {
+					player1Wins(snapshot);
+				} else if(p1token == "rock" && p2token == "spock") {
+					player2Wins(snapshot);
+				} else if(p1token == "spock" && p2token == "paper") {
+					player2Wins(snapshot);
+				} else if(p1token == "paper" && p2token == "spock") {
+					player1Wins(snapshot);
+				} else if(p1token == "spock" && p2token == "scissors") {
+					player1Wins(snapshot);
+				} else if(p1token == "scissors" && p2token == "spock") {
+					player2Wins(snapshot);
 				}
+
+
+
+
+
+
+
+
+
+
+
 			}
 		});
 	});
